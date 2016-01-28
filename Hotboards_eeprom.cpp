@@ -1,9 +1,10 @@
 /*
   Hotboards_eeprom.cpp - Driver to control serial (spi) eeprom memories, The memories are
-  compatibles amount the manufactures Microchip, Atmel and ST
+  compatibles amount the manufactures Microchip, Atmel and ST, and of course you can control
+  Hotboards eeprom board (http://hotboards.org)
   Created by Diego Perez, January 16, 2016.
   Released into the public domain.
-
+  
   Density:   1Kbit   | 2Kbit   | 4Kbit   | 8Kbit   | 16Kbit  | 32Kbit  | 64Kbit  | 128Kbit | 256Kbit | 512Kbit | 1 Mbit
   Part:      25xx010 | 25xx020 | 25xx040 | 25xx080 | 25xx160 | 25xx320 | 25xx640 | 25xx128 | 25xx256 | 25xx512 | 25xx1024
   Page/Byte: 16      | 16      | 16      | 16(32)  | 16(32)  | 32      | 32      | 64      | 64      | 128     | 256
@@ -32,8 +33,7 @@ Hotboards_eeprom::Hotboards_eeprom( uint8_t cs, uint8_t type )
 }
 
 /*
- * Position the LCD cursor; that is, set the location at which subsequent 
- * text written to the LCD will be displayed.
+ * just make sure the Cs pin is not clear
  */
 void Hotboards_eeprom::begin( void )
 {
@@ -42,16 +42,21 @@ void Hotboards_eeprom::begin( void )
 }
 
 /*
- * Position the LCD cursor; that is, set the location at which subsequent 
- * text written to the LCD will be displayed.
- * col: the column at which to position the cursor (with 0 being the first column)
- * row: the row at which to position the cursor (with 0 being the first row) 
+ * write a single byte in a given eeprom address, this operation will take 5ms
+ * address: eeprom address where tha byte will be written
+ * data: the byte that will be written at the given address 
  */
 void Hotboards_eeprom::write( uint32_t address, uint8_t data )
 {
     write( address, &data, 1 );
 }
 
+/*
+ * write a given number of bytes into the eeprom atarting at a given address
+ * address: eeprom address where tha byte will be written
+ * data: pointer to array of bytes that need to be written
+ * size: the number of bytes to write 
+ */
 void Hotboards_eeprom::write( uint32_t address, uint8_t *data, uint16_t size )
 {
     uint16_t temp;
@@ -99,6 +104,10 @@ void Hotboards_eeprom::write( uint32_t address, uint8_t *data, uint16_t size )
     } 
 }
 
+/*
+ * read a single byte from a given eeprom address
+ * address: eeprom address where the byte will be read
+ */
 uint8_t Hotboards_eeprom::read( uint32_t address )
 {
     uint8_t data;
@@ -106,6 +115,12 @@ uint8_t Hotboards_eeprom::read( uint32_t address )
     return data;  
 }
 
+/*
+ * read a given number of bytes from the eeprom starting at a given address
+ * address: eeprom address where the bytes will be read it
+ * data: pointer to array where data will be stored
+ * size: the number of bytes to read 
+ */
 void Hotboards_eeprom::read( uint32_t address, uint8_t *data, uint16_t size )
 {
     uint16_t i;

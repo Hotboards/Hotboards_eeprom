@@ -1,9 +1,10 @@
 /*
   Hotboards_eeprom.cpp - Driver to control serial (spi) eeprom memories, The memories are
-  compatibles amount the manufactures Microchip, Atmel and ST
+  compatibles amount the manufactures Microchip, Atmel and ST, and of course you can control
+  Hotboards eeprom board (http://hotboards.org)
   Created by Diego Perez, January 16, 2016.
   Released into the public domain.
-
+  
   Density:   1Kbit   | 2Kbit   | 4Kbit   | 8Kbit   | 16Kbit  | 32Kbit  | 64Kbit  | 128Kbit | 256Kbit | 512Kbit | 1 Mbit
   Part:      25xx010 | 25xx020 | 25xx040 | 25xx080 | 25xx160 | 25xx320 | 25xx640 | 25xx128 | 25xx256 | 25xx512 | 25xx1024
   Page/Byte: 16      | 16      | 16      | 16(32)  | 16(32)  | 32      | 32      | 64      | 64      | 128     | 256
