@@ -4,11 +4,11 @@
   Hotboards eeprom board (http://hotboards.org)
   Created by Diego Perez, January 16, 2016.
   Released into the public domain.
-  
+
   Density:   1Kbit   | 2Kbit   | 4Kbit   | 8Kbit   | 16Kbit  | 32Kbit  | 64Kbit  | 128Kbit | 256Kbit | 512Kbit | 1 Mbit
   Part:      25xx010 | 25xx020 | 25xx040 | 25xx080 | 25xx160 | 25xx320 | 25xx640 | 25xx128 | 25xx256 | 25xx512 | 25xx1024
   Page/Byte: 16      | 16      | 16      | 16(32)  | 16(32)  | 32      | 32      | 64      | 64      | 128     | 256
-  Addr/Bits: 7       | 8       | 9       | 16      | 16      | 16      | 16      | 16      | 16      | 16 
+  Addr/Bits: 7       | 8       | 9       | 16      | 16      | 16      | 16      | 16      | 16      | 16
 */
 #include "Hotboards_eeprom.h"
 #include <SPI.h>
@@ -32,31 +32,20 @@ Hotboards_eeprom::Hotboards_eeprom( uint8_t cs, uint8_t type )
     _density = EepromSize[ type ];
 }
 
-/*
- * just make sure the Cs pin is not clear
- */
+
 void Hotboards_eeprom::begin( void )
 {
    pinMode( _cs_pin, OUTPUT );
-   digitalWrite( _cs_pin, HIGH ); 
+   digitalWrite( _cs_pin, HIGH );
 }
 
-/*
- * write a single byte in a given eeprom address, this operation will take 5ms
- * address: eeprom address where tha byte will be written
- * data: the byte that will be written at the given address 
- */
+
 void Hotboards_eeprom::write( uint32_t address, uint8_t data )
 {
     write( address, &data, 1 );
 }
 
-/*
- * write a given number of bytes into the eeprom atarting at a given address
- * address: eeprom address where tha byte will be written
- * data: pointer to array of bytes that need to be written
- * size: the number of bytes to write 
- */
+
 void Hotboards_eeprom::write( uint32_t address, uint8_t *data, uint16_t size )
 {
     uint16_t temp;
@@ -85,7 +74,7 @@ void Hotboards_eeprom::write( uint32_t address, uint8_t *data, uint16_t size )
             data = data + temp;
             size = size - temp;
             address = address + temp;
-                
+
             /* Check if the remaining data is bigger than a page size */
             while( size > _page )
             {
@@ -101,26 +90,18 @@ void Hotboards_eeprom::write( uint32_t address, uint8_t *data, uint16_t size )
                 writePage( address, data, size );
             }
         }
-    } 
+    }
 }
 
-/*
- * read a single byte from a given eeprom address
- * address: eeprom address where the byte will be read
- */
+
 uint8_t Hotboards_eeprom::read( uint32_t address )
 {
     uint8_t data;
     read( address, &data, 1 );
-    return data;  
+    return data;
 }
 
-/*
- * read a given number of bytes from the eeprom starting at a given address
- * address: eeprom address where the bytes will be read it
- * data: pointer to array where data will be stored
- * size: the number of bytes to read 
- */
+
 void Hotboards_eeprom::read( uint32_t address, uint8_t *data, uint16_t size )
 {
     uint16_t i;
@@ -133,10 +114,10 @@ void Hotboards_eeprom::read( uint32_t address, uint8_t *data, uint16_t size )
         {
             size = _density - address;
         }
-        
+
         /* operation begins, select memory */
         digitalWrite( _cs_pin, LOW );
-        
+
         /* Send command Read and address, depend on device is the number of address bytes neccesary */
         sendAddress( READ, address );
 
@@ -187,14 +168,14 @@ void Hotboards_eeprom::writePage( uint32_t address, uint8_t *data, uint16_t size
     uint16_t i;
 
     /* Select memory */
-    digitalWrite( _cs_pin, LOW );  
+    digitalWrite( _cs_pin, LOW );
     /* write eneable latch */
     SPI.transfer( WREN );
     /* Unselect eeprom */
-    digitalWrite( _cs_pin, HIGH );    
-    
+    digitalWrite( _cs_pin, HIGH );
+
     /* Select memory */
-    digitalWrite( _cs_pin, LOW );    
+    digitalWrite( _cs_pin, LOW );
     /* Send comand write and address, depend on device is the number of address bytes neccesary */
     sendAddress( WRITE, address );
     /* Send data to eeprom */
@@ -205,9 +186,7 @@ void Hotboards_eeprom::writePage( uint32_t address, uint8_t *data, uint16_t size
         data++;
     };
     /* Unselect eeprom */
-    digitalWrite( _cs_pin, HIGH );    
+    digitalWrite( _cs_pin, HIGH );
     /* wait until data has been recorded */
-    delay( 6 );  
+    delay( 6 );
 }
-
-
